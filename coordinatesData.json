@@ -1,0 +1,124 @@
+{
+	"coordinatesCity": [
+    {
+    	"name":"danang",
+    	"lat":"16.047079",
+    	"lng":"108.206230",
+    	"title":"Đà Nẵng, Việt Nam"
+    },
+    {
+    	"name":"hanoi",
+    	"lat":"21.027763",
+    	"lng":"105.834160",
+    	"title":"Hà Nội, Việt Nam"
+    },
+    {
+    	"name":"hochiminh",
+    	"lat":"10.762622",
+    	"lng":"106.660172",
+    	"title":"Hồ Chí Minh, Việt Nam"
+    },
+    {
+    	"name":"angiang",
+    	"lat":"10.521584",
+    	"lng":"105.125896",
+    	"title":"An Giang, Việt Nam"
+    },
+    {
+    	"name":"bariavungtau",
+    	"lat":"10.50857380403518",
+    	"lng":"107.17963700000001",
+    	"title":"Bà Rịa - Vũng Tàu, Việt Nam"
+    },
+    {
+    	"name":"bacgiang",
+    	"lat":"21.301495",
+    	"lng":"106.629130",
+    	"title":"Bắc Giang, Việt Nam"
+    },
+    {
+    	"name":"backan",
+    	"lat":"22.14701",
+    	"lng":"105.83481",
+    	"title":"Bắc Kạn, Việt Nam"
+    },
+    {
+    	"name":"baclieu",
+    	"lat":"9.251556",
+    	"lng":"105.513649",
+    	"title":"Bạc Liêu, Việt Nam"
+    },
+    {
+    	"name":"bacninh",
+    	"lat":"21.18608",
+    	"lng":"106.07631",
+    	"title":"Bắc Ninh Việt Nam"
+    },
+    {
+    	"name":"bentre",
+    	"lat":"10.108155",
+    	"lng":"106.440587",
+    	"title":"Bến Tre, Việt Nam"
+    },
+    {
+    	"name":"binhdinh",
+    	"lat":"13.759660",
+    	"lng":"109.206123",
+    	"title":"Bình Định, Việt Nam"
+    },
+    {
+    	"name":"binhduong",
+    	"lat":"10.924067",
+    	"lng":"106.713028",
+    	"title":"Bình Dương, Việt Nam"
+    },
+    {
+    	"name":"binhphuoc",
+    	"lat":"11.751189",
+    	"lng":"106.723464",
+    	"title":"Bình Phước, Việt Nam"
+    },
+    {
+    	"name":"binhthuan",
+    	"lat":"11.317883",
+    	"lng":"108.657959",
+    	"title":"Bình Thuận, Việt Nam"
+    },
+    {
+    	"name":"camau",
+    	"lat":"9.17682",
+    	"lng":"105.15242",
+    	"title":"Cà Mau, Việt Nam"
+    },
+    {
+    	"name":"cantho",
+    	"lat":"10.045162",
+    	"lng":"105.746857",
+    	"title":"Cần Thơ, Việt Nam"
+    },
+    {
+    	"name":"caobang",
+    	"lat":"22.679281",
+    	"lng":"106.260452",
+    	"title":"Cao Bằng, Việt Nam"
+    },
+    {
+    	"name":"daklak",
+    	"lat":"12.710012",
+    	"lng":"108.237752",
+    	"title":"Đắk Lắk, Việt Nam"
+    },
+    {
+    	"name":"daknong",
+    	"lat":"12.264648",
+    	"lng":"107.609806",
+    	"title":"Đắk Nông, Việt Nam"
+    },
+    {
+    	"name":"dienbien",
+    	"lat":"21.626793",
+    	"lng":"103.158875",
+    	"title":"Điện Biên, Việt Nam"
+    }
+  ]
+}

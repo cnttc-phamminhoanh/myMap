@@ -15,22 +15,51 @@
       margin: 0;
       padding: 0;
     }
+    #btnAction {
+      background: #3878c7;
+      padding: 10px 40px;
+      border: #3672bb 1px solid;
+      border-radius: 2px;
+      color: #FFF;
+      font-size: 0.9em;
+      cursor:pointer;
+     display:block;
+    }
+    #btnAction:disabled {
+      background: #6c99d2;
+    }
   </style>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
   <h1>My Google Map</h1>
+  <input
+      id="pac-input"
+      class="controls"
+      type="text"
+      placeholder="Search Box"
+    />
+  <div id="button-layer">
+    <button id="btnSearch" onClick="change()">My Current Location</button>
+  </div>
+  <div id="button-layer">
+    <button id="btnAction" onClick="locate()">My Current Location</button>
+  </div>
   <div id="map"></div>
   <script type="text/javascript">
     let marker;
+    let map;
+
     function initMap() {
-      var latlng = new google.maps.LatLng(16.047079, 108.206230);
+      
+      var latlngDn = new google.maps.LatLng(16.047079, 108.206230);
       var latlngHn = new google.maps.LatLng(21.027763, 105.834160);
       var latlngHcm = new google.maps.LatLng(10.762622, 106.660172);
       var options = {
-          zoom: 8,
-          center: latlng,  
+          zoom: 6,
+          center: latlngDn,  
       };
-      var map = new google.maps.Map(document.getElementById("map"),options); 
+      map = new google.maps.Map(document.getElementById("map"),options); 
       // marker = new google.maps.Marker({
       //   position: latlng,map,title: "Đà Nẵng, Việt Nam",
       // });
@@ -38,14 +67,16 @@
         map,
         draggable: true,
         animation: google.maps.Animation.DROP,
-        position: latlng,
+        position: latlngDn,
+        title: "Đà Nẵng, Việt Nam"
       });
       new google.maps.Marker({
-        position: latlngHn,map,title: "Hà Nội, Việt Nam",icon:"https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        position: latlngHn,map,title: "Hà Nội, Việt Nam", animation: google.maps.Animation.DROP,
       });
       new google.maps.Marker({
-        position: latlngHcm,map,title: "Hồ Chí Minh, Việt Nam",
+        position: latlngHcm,map,title: "Hồ Chí Minh, Việt Nam", animation: google.maps.Animation.DROP,
       });
+
 
       const contentString =
     '<div id="content">' +
@@ -61,13 +92,14 @@
     "(last visited June 22, 2009).</p>" +
     "</div>" +
     "</div>";
-    const infowindow = new google.maps.InfoWindow({
-      content: contentString,
-    });
+      const infowindow = new google.maps.InfoWindow({
+        content: contentString,
+      });
       marker.addListener("click", toggleBounce);
       marker.addListener("click", () => {
         infowindow.open(map, marker);
       });
+
     }
     function toggleBounce() {
       if (marker.getAnimation() !== null) {
@@ -76,7 +108,108 @@
         marker.setAnimation(google.maps.Animation.BOUNCE);
       }
     }
+
+    function locate(){
+      document.getElementById("btnAction").disabled = true;
+      document.getElementById("btnAction").innerHTML = "Processing...";
+
+      if (navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(function(position){ 
+          var currentLatitude = position.coords.latitude;
+          var currentLongitude = position.coords.longitude;
+
+          var infoWindowHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
+          var infoWindow = new google.maps.InfoWindow({map: map, content: infoWindowHTML});
+          var currentLocation = new google.maps.LatLng(currentLatitude, currentLongitude);
+          infoWindow.setPosition(currentLocation);
+          //document.getElementById("btnAction").style.display = 'none';
+          
+          var marker1 = new google.maps.Marker({
+            position: currentLocation,map,title: "current Location", animation: google.maps.Animation.BOUNCE ,
+          });
+          map.setCenter(currentLocation);
+          map.setZoom(13);
+        });
+      }
+
+
+
+
+
+      // var valueinput = document.getElementById("pac-input").value;
+      // var lat = "";
+      // var lng = "";
+      //       var urlJsonMembers = 'http://localhost:9081/coordinatesCity';
+      //       var urlMockApiMembers = 'https://5efdebbddd373900160b3a36.mockapi.io/api/members';
+      //       axios.get(urlJsonMembers).then(function(res){
+      //         var getData = res.data;
+              
+              
+      //         getData.map(function(ele){
+      //           if(ele.name===valueinput){
+      //             lat = ele.lat;
+      //             lng = ele.lng;
+      //             var latlngSearch = new google.maps.LatLng(lat,lng);
+      //         new google.maps.Marker({
+      //   position: latlngSearch,map,title: "Search, Việt Nam", animation: google.maps.Animation.DROP,
+      // });
+      //           }
+      //         });
+             
+      //       }).catch(function(err){
+      //         console.log(err);
+      //       });
+
+
+
+
+
+      //       console.log(lat,lng);
+
+      //var a = valueinput.split(",");
+      
+    }
+
+
   </script> 
+
+
+  <script type="text/javascript">
+      function change(){
+        var latlngHn = new google.maps.LatLng(21.027763, 105.834160);
+        var valueinput = document.getElementById("pac-input").value;
+
+        var lat = "";
+        var lng = "";
+            var urlJsonMembers = 'http://localhost:9081/coordinatesCity';
+            //var urlMockApiMembers = 'https://5efdebbddd373900160b3a36.mockapi.io/api/members';
+            axios.get(urlJsonMembers).then(function(res){
+              var getData = res.data;
+            
+              getData.map(function(ele){
+                if(ele.name===valueinput){
+                  lat = ele.lat;
+                  lng = ele.lng;
+                  var latlngSearch = new google.maps.LatLng(lat,lng);
+                  new google.maps.Marker({
+                    position: latlngSearch,map,title: ele.title, animation: google.maps.Animation.DROP,
+                  });
+                  map.setCenter(latlngSearch);
+                  map.setZoom(13);
+                }
+              });
+             
+            }).catch(function(err){
+              console.log(err);
+            });
+
+
+        // map.setCenter(latlngHn);
+        // map.setZoom(13);
+      }
+
+  </script>
+
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5AAWYfLUz_vfQNJ0rjOcW7ru2uBf8ljs&callback=initMap">
   </script>
