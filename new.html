@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>My Map</title>
+	<script src='https://code.jquery.com/jquery-3.5.1.slim.min.js', integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj', crossorigin='anonymous'></script>
+	<link href="sb-admin-2.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<style>
+    #map  {
+      	height: 100% !important;
+      	width: 99.8% !important;  
+    }
+    #btnAction {
+     	background: #1cc88a;
+     	padding: 10px 40px;
+     	border: #3672bb 1px solid;
+     	border-radius: 2px;
+     	color: #FFF;
+      	font-size: 0.9em;
+      	cursor:pointer;
+     	display:block;
+    }
+    #btnAction:disabled {
+      	background: #6c99d2;
+    }
+  </style>
+</head>
+<body id="page-top">
+	<div id="wrapper">
+    	<ul style="background-image: linear-gradient(180deg,#1cc88a 10%,#20c9a6 100%)!important;margin: 0 3px !important;" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+	      	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+	        	<div class="sidebar-brand-icon rotate-n-15">
+	          		<i class="fas fa-laugh-wink"></i>
+	        	</div>
+	        	<div class="sidebar-brand-text mx-3">My Map</div>
+	      	</a>
+      		<hr class="sidebar-divider">
+      		<div class="sidebar-heading">
+        		<h5>Information</h5>
+      		</div>
+      		<hr class="sidebar-divider d-none d-md-block">
+    	</ul>
+
+    	<div id="content-wrapper" class="d-flex flex-column">
+		    <div id="content">
+        		<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="margin-bottom:1px !important;">
+			        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+           				<div class="input-group">
+              				<input style="border:1px solid #20c9a6 !important;" id="pac-input" type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              				<div class="input-group-append">
+                				<button class="btn btn-success" id="btnSearch" onClick="change()" type="button">
+                  					<i class="fas fa-search fa-sm"></i>
+               					</button>
+              				</div>
+            			</div>
+          			</form>
+
+          			<ul class="navbar-nav ml-auto">			          
+				        <li class="nav-item dropdown no-arrow mx-1">
+				              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				                <i class="fas fa-bell fa-fw"></i>
+				                <!-- Counter - Alerts -->
+				                <span class="badge badge-danger badge-counter">3+</span>
+				              </a>
+				              <!-- Dropdown - Alerts -->
+				              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+				                <h6 class="dropdown-header">
+				                  Alerts Center
+				                </h6>
+				                <a class="dropdown-item d-flex align-items-center" href="#">
+				                  <div class="mr-3">
+				                    <div class="icon-circle bg-primary">
+				                      <i class="fas fa-file-alt text-white"></i>
+				                    </div>
+				                  </div>
+				                  <div>
+				                    <div class="small text-gray-500">December 12, 2019</div>
+				                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
+				                  </div>
+				                </a>
+				                <a class="dropdown-item d-flex align-items-center" href="#">
+				                  <div class="mr-3">
+				                    <div class="icon-circle bg-success">
+				                      <i class="fas fa-donate text-white"></i>
+				                    </div>
+				                  </div>
+				                  <div>
+				                    <div class="small text-gray-500">December 7, 2019</div>
+				                    $290.29 has been deposited into your account!
+				                  </div>
+				                </a>
+				                <a class="dropdown-item d-flex align-items-center" href="#">
+				                  <div class="mr-3">
+				                    <div class="icon-circle bg-warning">
+				                      <i class="fas fa-exclamation-triangle text-white"></i>
+				                    </div>
+				                  </div>
+				                  <div>
+				                    <div class="small text-gray-500">December 2, 2019</div>
+				                    Spending Alert: We've noticed unusually high spending for your account.
+				                  </div>
+				                </a>
+				                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+				              </div>
+				        </li>
+
+				        <li class="nav-item dropdown no-arrow mx-1">
+				              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				                <i class="fas fa-envelope fa-fw"></i>
+				                <!-- Counter - Messages -->
+				                <span class="badge badge-danger badge-counter">7</span>
+				              </a>
+				              <!-- Dropdown - Messages -->
+				              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+				                <h6 class="dropdown-header">
+				                  Message Center
+				                </h6>
+				                <a class="dropdown-item d-flex align-items-center" href="#">
+				                  <div class="dropdown-list-image mr-3">
+				                    <img class="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">
+				                    <div class="status-indicator bg-success"></div>
+				                  </div>
+				                  <div class="font-weight-bold">
+				                    <div class="text-truncate">Hi there! I am wondering if you can help me with a problem I've been having.</div>
+				                    <div class="small text-gray-500">Emily Fowler · 58m</div>
+				                  </div>
+				                </a>
+				                <a class="dropdown-item d-flex align-items-center" href="#">
+				                  <div class="dropdown-list-image mr-3">
+				                    <img class="rounded-circle" src="https://source.unsplash.com/AU4VPcFN4LE/60x60" alt="">
+				                    <div class="status-indicator"></div>
+				                  </div>
+				                  <div>
+				                    <div class="text-truncate">I have the photos that you ordered last month, how would you like them sent to you?</div>
+				                    <div class="small text-gray-500">Jae Chun · 1d</div>
+				                  </div>
+				                </a>
+				                <a class="dropdown-item d-flex align-items-center" href="#">
+				                  <div class="dropdown-list-image mr-3">
+				                    <img class="rounded-circle" src="https://source.unsplash.com/CS2uCrpNzJY/60x60" alt="">
+				                    <div class="status-indicator bg-warning"></div>
+				                  </div>
+				                  <div>
+				                    <div class="text-truncate">Last month's report looks great, I am very happy with the progress so far, keep up the good work!</div>
+				                    <div class="small text-gray-500">Morgan Alvarez · 2d</div>
+				                  </div>
+				                </a>
+				                <a class="dropdown-item d-flex align-items-center" href="#">
+				                  <div class="dropdown-list-image mr-3">
+				                    <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="">
+				                    <div class="status-indicator bg-success"></div>
+				                  </div>
+				                  <div>
+				                    <div class="text-truncate">Am I a good boy? The reason I ask is because someone told me that people say this to all dogs, even if they aren't good...</div>
+				                    <div class="small text-gray-500">Chicken the Dog · 2w</div>
+				                  </div>
+				                </a>
+				                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+				              </div>
+				        </li>
+
+            			<div class="topbar-divider d-none d-sm-block"></div>
+
+				            <!-- Nav Item - User Information -->
+				        <li class="nav-item dropdown no-arrow">
+				            <button style="margin-top: 15px !important;" id="btnAction" onClick="locate()">My Current Location</button>
+				        </li>
+
+          			</ul>
+       			</nav>
+    		</div>
+ 
+  			<div id="map"></div>
+		</div>
+	</div>	
+
+    <script type="text/javascript">
+    	let marker;
+    	let map;
+    	function initMap() {
+      
+	    	var latlngDn = new google.maps.LatLng(16.047079, 108.206230);
+	      	var latlngHn = new google.maps.LatLng(21.027763, 105.834160);
+	      	var latlngHcm = new google.maps.LatLng(10.762622, 106.660172);
+	      	var options = {
+	        	zoom: 6,
+	        	center: latlngDn,  
+	      	};
+      		map = new google.maps.Map(document.getElementById("map"),options); 
+      
+      		marker = new google.maps.Marker({
+		        map,
+		        draggable: true,
+		        animation: google.maps.Animation.DROP,
+		        position: latlngDn,
+		        title: "Đà Nẵng, Việt Nam"
+      		});
+		    new google.maps.Marker({
+		    	position: latlngHn,map,title: "Hà Nội, Việt Nam", animation: google.maps.Animation.DROP,
+		    });
+		    new google.maps.Marker({
+		        position: latlngHcm,map,title: "Hồ Chí Minh, Việt Nam", animation: google.maps.Animation.DROP,
+		    });
+
+
+      		const contentString =
+			    '<div id="content">' +
+			    '<div id="siteNotice">' +
+			    "</div>" +
+			    '<h1 id="firstHeading" class="firstHeading">Da nang</h1>' +
+			    '<div id="bodyContent">' +
+			    "<p><b>Da Nang</b>, also referred to as <b>Ayers Rock</b>, is a large " +
+			    "sandstone rock formation in the southern part of the " +
+			    "Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) " 
+			    "sacred to the Pitjantjatjara and Yankunytjatjara, the " 
+			    "https://en.wikipedia.org/w/index.php?title=Uluru</a> " +
+			    "(last visited June 22, 2009).</p>" +
+			    "</div>" +
+			    "</div>";
+      		const infowindow = new google.maps.InfoWindow({
+        		content: contentString,
+      		});
+      		marker.addListener("click", toggleBounce);
+      		marker.addListener("click", () => {
+       			infowindow.open(map, marker);
+      		});
+
+    	}
+	    function toggleBounce() {
+	    	if (marker.getAnimation() !== null) {
+	        	marker.setAnimation(null);
+	      	} 
+	      	else {
+	        	marker.setAnimation(google.maps.Animation.BOUNCE);
+	      	}
+	    }
+
+	    function locate(){
+
+	      	document.getElementById("btnAction").disabled = true;
+	      	document.getElementById("btnAction").innerHTML = "Processing...";
+
+	      	if (navigator.geolocation)
+	      	{
+	        	navigator.geolocation.getCurrentPosition(function(position){ 
+	          		var currentLatitude = position.coords.latitude;
+	          		var currentLongitude = position.coords.longitude;
+
+	        		var infoWindowHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
+	          		var infoWindow = new google.maps.InfoWindow({map: map, content: infoWindowHTML});
+	          		var currentLocation = new google.maps.LatLng(currentLatitude, currentLongitude);
+	          		infoWindow.setPosition(currentLocation);
+	          		//document.getElementById("btnAction").style.display = 'none';
+	          
+	          		var marker1 = new google.maps.Marker({
+	            		position: currentLocation,map,title: "current Location", animation: google.maps.Animation.BOUNCE ,
+	          		});
+	          		map.setCenter(currentLocation);
+	          		map.setZoom(13);
+	        	});
+	     	}
+	    }
+
+  	</script> 
+
+  	<script type="text/javascript">
+      	function change(){
+        	var latlngHn = new google.maps.LatLng(21.027763, 105.834160);
+        	var valueinput = document.getElementById("pac-input").value;
+        	var lat = "";
+        	var lng = "";
+            var urlJsonMembers = 'http://localhost:9081/coordinatesBankDaNang';
+            // var urlJsonMembers = 'http://localhost:9081/coordinatesCity';
+            //var urlMockApiMembers = 'https://5efdebbddd373900160b3a36.mockapi.io/api/members';
+            axios.get(urlJsonMembers).then(function(res){
+              	var getData = res.data;
+              	getData.map(function(ele){
+                	if(ele.name===valueinput){
+                  		lat = ele.lat;
+                  		lng = ele.lng;
+                  		var latlngSearch = new google.maps.LatLng(lat,lng);
+                  		new google.maps.Marker({position: latlngSearch,map,title: ele.title, animation: google.maps.Animation.DROP,});
+                 		map.setCenter(latlngSearch);
+                  		map.setZoom(13);
+                	}
+              	});
+            })
+            .catch(function(err){
+            	console.log(err);
+            });
+      	}
+  	</script>
+   	<script async defersrc="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5AAWYfLUz_vfQNJ0rjOcW7ru2uBf8ljs&callback=initMap"></script>
+</body>
+</html>
