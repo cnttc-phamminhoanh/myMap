@@ -1,218 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banks Map Web</title>
+  <title>My Map</title>
+  <script src='https://code.jquery.com/jquery-3.5.1.slim.min.js', integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj', crossorigin='anonymous'></script>
+  <link href="sb-admin-2.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <style>
-    #map {
-      height: 100%;
-    }
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
+    #map  {
+        height: 100% !important;
+        width: 99.7% !important;  
     }
     #btnAction {
-      background: #3878c7;
+      background: #1cc88a;
       padding: 10px 40px;
       border: #3672bb 1px solid;
       border-radius: 2px;
       color: #FFF;
-      font-size: 0.9em;
-      cursor:pointer;
-     display:block;
+        font-size: 0.9em;
+        cursor:pointer;
+      display:block;
     }
     #btnAction:disabled {
-      background: #6c99d2;
+        background: #6c99d2;
     }
   </style>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
-<body>
-  <h1>My Google Map</h1>
-  <input
-      id="pac-input"
-      class="controls"
-      type="text"
-      placeholder="Search Box"
-    />
-  <div id="button-layer">
-    <button id="btnSearch" onClick="change()">My Current Location</button>
-  </div>
-  <div id="button-layer">
-    <button id="btnAction" onClick="locate()">My Current Location</button>
-  </div>
-  <div id="map"></div>
-  <script type="text/javascript">
-    let marker;
-    let map;
-
-    function initMap() {
-      
-      var latlngDn = new google.maps.LatLng(16.047079, 108.206230);
-      var latlngHn = new google.maps.LatLng(21.027763, 105.834160);
-      var latlngHcm = new google.maps.LatLng(10.762622, 106.660172);
-      var options = {
-          zoom: 6,
-          center: latlngDn,  
-      };
-      map = new google.maps.Map(document.getElementById("map"),options); 
-      // marker = new google.maps.Marker({
-      //   position: latlng,map,title: "Đà Nẵng, Việt Nam",
-      // });
-      marker = new google.maps.Marker({
-        map,
-        draggable: true,
-        animation: google.maps.Animation.DROP,
-        position: latlngDn,
-        title: "Đà Nẵng, Việt Nam"
-      });
-      new google.maps.Marker({
-        position: latlngHn,map,title: "Hà Nội, Việt Nam", animation: google.maps.Animation.DROP,
-      });
-      new google.maps.Marker({
-        position: latlngHcm,map,title: "Hồ Chí Minh, Việt Nam", animation: google.maps.Animation.DROP,
-      });
-
-
-      const contentString =
-    '<div id="content">' +
-    '<div id="siteNotice">' +
-    "</div>" +
-    '<h1 id="firstHeading" class="firstHeading">Da nang</h1>' +
-    '<div id="bodyContent">' +
-    "<p><b>Da Nang</b>, also referred to as <b>Ayers Rock</b>, is a large " +
-    "sandstone rock formation in the southern part of the " +
-    "Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) " 
-    "sacred to the Pitjantjatjara and Yankunytjatjara, the " 
-    "https://en.wikipedia.org/w/index.php?title=Uluru</a> " +
-    "(last visited June 22, 2009).</p>" +
-    "</div>" +
-    "</div>";
-      const infowindow = new google.maps.InfoWindow({
-        content: contentString,
-      });
-      marker.addListener("click", toggleBounce);
-      marker.addListener("click", () => {
-        infowindow.open(map, marker);
-      });
-
-    }
-    function toggleBounce() {
-      if (marker.getAnimation() !== null) {
-        marker.setAnimation(null);
-      } else {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-      }
-    }
-
-    function locate(){
-      document.getElementById("btnAction").disabled = true;
-      document.getElementById("btnAction").innerHTML = "Processing...";
-
-      if (navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(function(position){ 
-          var currentLatitude = position.coords.latitude;
-          var currentLongitude = position.coords.longitude;
-
-          var infoWindowHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
-          var infoWindow = new google.maps.InfoWindow({map: map, content: infoWindowHTML});
-          var currentLocation = new google.maps.LatLng(currentLatitude, currentLongitude);
-          infoWindow.setPosition(currentLocation);
-          //document.getElementById("btnAction").style.display = 'none';
-          
-          var marker1 = new google.maps.Marker({
-            position: currentLocation,map,title: "current Location", animation: google.maps.Animation.BOUNCE ,
-          });
-          map.setCenter(currentLocation);
-          map.setZoom(13);
-        });
-      }
-
-
-
-
-
-      // var valueinput = document.getElementById("pac-input").value;
-      // var lat = "";
-      // var lng = "";
-      //       var urlJsonMembers = 'http://localhost:9081/coordinatesCity';
-      //       var urlMockApiMembers = 'https://5efdebbddd373900160b3a36.mockapi.io/api/members';
-      //       axios.get(urlJsonMembers).then(function(res){
-      //         var getData = res.data;
-              
-              
-      //         getData.map(function(ele){
-      //           if(ele.name===valueinput){
-      //             lat = ele.lat;
-      //             lng = ele.lng;
-      //             var latlngSearch = new google.maps.LatLng(lat,lng);
-      //         new google.maps.Marker({
-      //   position: latlngSearch,map,title: "Search, Việt Nam", animation: google.maps.Animation.DROP,
-      // });
-      //           }
-      //         });
-             
-      //       }).catch(function(err){
-      //         console.log(err);
-      //       });
-
-
-
-
-
-      //       console.log(lat,lng);
-
-      //var a = valueinput.split(",");
-      
-    }
-
-
-  </script> 
-
-
-  <script type="text/javascript">
-      function change(){
-        var latlngHn = new google.maps.LatLng(21.027763, 105.834160);
-        var valueinput = document.getElementById("pac-input").value;
-
-        var lat = "";
-        var lng = "";
-            var urlJsonMembers = 'http://localhost:9081/coordinatesBankDaNang';
-            // var urlJsonMembers = 'http://localhost:9081/coordinatesCity';
-            //var urlMockApiMembers = 'https://5efdebbddd373900160b3a36.mockapi.io/api/members';
-            axios.get(urlJsonMembers).then(function(res){
-              var getData = res.data;
+<body id="page-top">
+  <div id="wrapper">
+      <ul style="background-image: linear-gradient(180deg,#1cc88a 10%,#20c9a6 100%)!important;margin: 0 3px !important;width: 300px!important;" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+          <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-laugh-wink"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">My Map</div>
+          </a>
+          <hr class="sidebar-divider">
+          <div class="sidebar-heading">
+            <h5 style="font-weight: bold !important;color: #090101 !important;font-size: 16px !important;">Information</h5>
+          </div>
+          <hr class="sidebar-divider d-none d-md-block">
+          <div id="infor" style="color: white;">
             
-              getData.map(function(ele){
-                if(ele.name===valueinput){
-                  lat = ele.lat;
-                  lng = ele.lng;
-                  var latlngSearch = new google.maps.LatLng(lat,lng);
-                  new google.maps.Marker({
-                    position: latlngSearch,map,title: ele.title, animation: google.maps.Animation.DROP,
-                  });
-                  map.setCenter(latlngSearch);
-                  map.setZoom(13);
-                }
-              });
-             
-            }).catch(function(err){
-              console.log(err);
-            });
+          </div>
+      </ul>
 
+      <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="margin-bottom:1px !important;">
+              <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                  <div class="input-group">
+                      <input style="border:1px solid #20c9a6 !important;" id="pac-input" type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                        <button class="btn btn-success" id="btnSearch" onClick="change()" type="button">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                      </div>
+                  </div>
+                </form>
 
-        // map.setCenter(latlngHn);
-        // map.setZoom(13);
+                <ul class="navbar-nav ml-auto">               
+                <li class="nav-item dropdown no-arrow mx-1">
+                      <button style="margin-top: 18px !important;background: #1cc88a;padding: 5px 20px;border: #3672bb 1px solid;border-radius: 2px;color: #FFF;" onClick="showMarkers()">Show</button>
+                </li>
+
+                <li class="nav-item dropdown no-arrow mx-1">
+                      <button style="margin-top: 18px !important;background: #1cc88a;padding: 5px 20px;border: #3672bb 1px solid;border-radius: 2px;color: #FFF;" onClick="clearMarkers()">Hide</button>
+                </li>
+
+                  <div class="topbar-divider d-none d-sm-block"></div>
+
+                    <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow">
+                    <button style="margin-top: 15px !important;" id="btnAction" onClick="locate()">My Current Location</button>
+                </li>
+
+                </ul>
+            </nav>
+        </div>
+ 
+      <div id="map"></div>
+    </div>
+  </div>  
+
+    <script type="text/javascript">
+
+      let markers = [];
+      let map;
+      let markerLocation;
+      function initMap() 
+      {
+        var latlngDn = new google.maps.LatLng(16.047079, 108.206230);
+          var options = {
+            zoom: 6,
+            center: latlngDn,  
+          };
+          map = new google.maps.Map(document.getElementById("map"),options); 
+          
       }
 
-  </script>
+      function locate(){
 
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5AAWYfLUz_vfQNJ0rjOcW7ru2uBf8ljs&callback=initMap">
-  </script>
+          // document.getElementById("btnAction").innerHTML = "Processing...";
+
+          if (navigator.geolocation)
+          {
+            navigator.geolocation.getCurrentPosition(function(position){ 
+                var currentLatitude = position.coords.latitude;
+                var currentLongitude = position.coords.longitude;
+
+              //var infoWindowHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
+                //var infoWindow = new google.maps.InfoWindow({map: map, content: infoWindowHTML});
+
+                var currentLocation = new google.maps.LatLng(currentLatitude, currentLongitude);
+                        
+                markerLocation = new google.maps.Marker({
+                  position: currentLocation,map,title: "Current Location", animation: google.maps.Animation.BOUNCE ,
+                  icon : "https://developers.google.com/maps/documentation/javascript/examples/full/images/library_maps.png"
+                });
+                map.setCenter(currentLocation);
+                map.setZoom(15);
+
+                markerLocation.addListener("click",function(){
+
+                  setMapOnAll(null);
+                  setMapOnAll(map);
+
+                  if(markerLocation.getAnimation()!==null){
+                    markerLocation.setAnimation(null);
+                  }
+                  else{
+                    markerLocation.setAnimation(google.maps.Animation.BOUNCE);
+                    document.getElementById("infor").innerHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
+                  }
+                  
+                });
+            });
+        }
+      }
+
+
+      function xoadau(str) {
+        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+        str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+        str = str.replace(/đ/g, "d");
+        str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+        str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+        str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+        str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+        str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+        str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+        str = str.replace(/Đ/g, "D");
+        return str;
+    }
+
+    function addMarker(props){
+      var latlng = new google.maps.LatLng(props.lat,props.lng);
+      var mar = new google.maps.Marker({
+        position : latlng,
+        map:map,
+        title: props.title,
+        animation: google.maps.Animation.DROP
+      });
+      map.setCenter(latlng);
+            map.setZoom(13);
+
+            markers.push(mar);
+
+            mar.addListener("click",function(){
+
+              setMapOnAll(null);
+              setMapOnAll(map);
+
+              if (mar.getAnimation() !== null) {
+              mar.setAnimation(null);
+              
+              document.getElementById("infor").innerHTML = "";
+            } 
+            else {
+              mar.setAnimation(google.maps.Animation.BOUNCE);
+              document.getElementById("infor").innerHTML = "<p>" + props.content + "</p>";
+            }
+              
+            });       
+    }
+
+    function setMapOnAll(map) {
+        for (let i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+          if(markerLocation){
+            markerLocation.setMap(map);
+          }   
+        }
+    }
+
+    function clearMarkers() {
+        setMapOnAll(null);
+        document.getElementById("infor").innerHTML = "";
+    }
+
+    function showMarkers() {
+        setMapOnAll(map);
+        
+    }
+
+        function change(){
+          var valueinput = document.getElementById("pac-input").value.trim();
+          
+            var urlJsonBankDn = 'http://localhost:9081/coordinatesBankDn';
+
+            var urlJsonCoordinates = 'http://localhost:9081/coordinates';
+            
+            var Link = '';
+            if(valueinput.length > 7){
+              Link =  urlJsonBankDn;
+            }
+            else{
+              Link = urlJsonCoordinates;
+            }
+            //console.log(Link);
+            if(valueinput)
+            {
+              axios.get(Link).then(function(res)
+              {
+                  var getData = res.data;
+                  var coorSearch = getData.filter(function(coordinate)
+                  {
+            return (xoadau(coordinate.name).toLowerCase()).indexOf((xoadau(valueinput).toLowerCase())) != -1;
+          });
+                 
+                        
+          if(coorSearch.length > 0)
+          {
+            for(var i=0;i<coorSearch.length;i++)
+            {
+              addMarker(coorSearch[i]);
+
+            }
+          }
+          else
+          {
+            alert("Not found values");
+          }
+                                        
+              })
+              .catch(function(err){});  
+            }
+            else{
+              alert("Please enter search word");
+            }     
+            //console.log(markers);       
+        }
+
+    </script> 
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5AAWYfLUz_vfQNJ0rjOcW7ru2uBf8ljs&callback=initMap"></script>
 </body>
 </html>
