@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+ 
   <style>
     #map  {
         height: 100% !important;
@@ -53,17 +54,26 @@
         <div id="content">
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="margin-bottom:1px !important;">
               <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                  <div class="input-group">
-                      <input style="border:1px solid #20c9a6 !important;" id="pac-input" type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                      <div class="input-group-append">
-                        <button class="btn btn-success" id="btnSearch" onClick="change()" type="button">
-                            <i class="fas fa-search fa-sm"></i>
-                        </button>
-                      </div>
-                  </div>
-                </form>
+                <div class="input-group">
+                    <input style="border:1px solid #20c9a6 !important;" id="pac-input" type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-success" id="btnSearch" onClick="change()" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                </div>
+              </form>
 
-                <ul class="navbar-nav ml-auto">               
+              <div class="form-group" style="margin-top: 16px;margin-right: 100px;">  
+                <select onchange="changeCode()" class="form-control" id="sel1">
+                  <option value="tp">City</option>
+                  <option value="nh">Bank</option>
+                  <option value="a">All</option>    
+                </select>
+              </div>
+              
+
+                <ul class="navbar-nav ml-auto">  
                 <li class="nav-item dropdown no-arrow mx-1">
                       <button style="margin-top: 13px !important;background: #1cc88a;padding: 2px 8px;border: #3672bb 1px solid;border-radius: 2px;color: #FFF;" onClick="showMarkers()">Show</button>
                 </li>
@@ -115,7 +125,7 @@
 
       function clearMarkers() {
         setMapOnAll(null);
-        //document.getElementById("infor").innerHTML = "";
+        
         setInfor("infor","");
       }
 
@@ -133,18 +143,17 @@
       function locate(){
 
           setMapOnAll(null);
+          
           setMapOnAll(map);
-          // document.getElementById("btnAction").innerHTML = "Processing...";
+          
           //deleteMarker();
           //markers=[];
+
           if (navigator.geolocation)
           {
             navigator.geolocation.getCurrentPosition(function(position){
                 var currentLatitude = position.coords.latitude;
                 var currentLongitude = position.coords.longitude;
-
-              //var infoWindowHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
-                //var infoWindow = new google.maps.InfoWindow({map: map, content: infoWindowHTML});
 
                 var currentLocation = new google.maps.LatLng(currentLatitude, currentLongitude);
                         
@@ -155,27 +164,28 @@
                 //   "content":"Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude,
                 // }
                 // addMarker(loca);
+
                 markerLocation = new google.maps.Marker({
                   position: currentLocation,map,title: "Current Location",
-                  icon : "https://developers.google.com/maps/documentation/javascript/examples/full/images/library_maps.png"
+                  icon : "https://developers.google.com/maps/documentation/javascript/examples/full/images/library_maps.png",
+                  animation:google.maps.Animation.BOUNCE,
                 });
 
                 markers.push(markerLocation);
 
                 map.setCenter(currentLocation);
                 map.setZoom(15);
-
+                setInfor("infor","Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude);
                 markerLocation.addListener("click",function(){
 
-                  setMapOnAll(null);
-                  setMapOnAll(map);
-
                   if(markerLocation.getAnimation()!==null){
+
                     markerLocation.setAnimation(null);
+                    setInfor("infor","");
                   }
                   else{
                     markerLocation.setAnimation(google.maps.Animation.BOUNCE);
-                    //document.getElementById("infor").innerHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
+                    
                     setInfor("infor","Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude);
                   }
                   
@@ -184,10 +194,10 @@
         }
       }
 
-      function setMapOnAll(map) {
+      function setMapOnAll(map){
+
         for (let i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
-          
+          markers[i].setMap(map);  
         }
       }
 
@@ -210,6 +220,7 @@
       }
 
       function addMarker(props){
+
         var latlng = new google.maps.LatLng(props.lat,props.lng);
         var mar = new google.maps.Marker({
           position : latlng,
@@ -220,9 +231,7 @@
         map.setCenter(latlng);
         map.setZoom(13);
 
-       
         markers.push(mar);
-        
 
         mar.addListener("click",function(){
 
@@ -232,12 +241,11 @@
           if (mar.getAnimation() !== null) {
             mar.setAnimation(null);
                 
-            //document.getElementById("infor").innerHTML = "";
             setInfor("infor","");
           } 
           else {
             mar.setAnimation(google.maps.Animation.BOUNCE);
-            //document.getElementById("infor").innerHTML = "<p>" + props.content + "</p>";
+            
             setInfor("infor","<p>" + props.content + "</p>");
           }
                 
@@ -248,19 +256,25 @@
 
         setInfor("infor","");
 
-        var valueinput = document.getElementById("pac-input").value.trim();
+        var sel = document.getElementById('sel1').value;
 
         var urlJsonCoordinates = 'http://localhost:9081/coordinates';
-          
+
+        var valueinput = document.getElementById("pac-input").value.trim();
+      
         if(valueinput)
         {
           axios.get(urlJsonCoordinates).then(function(res)
           {
+            
             deleteMarker();
-            var getData = res.data;
+            var getData = res.data;          
+            
             var coorSearch = getData.filter(function(coordinate){
-              return (xoadau(coordinate.name).toLowerCase()).indexOf((xoadau(valueinput).toLowerCase())) != -1;
+              return (xoadau(coordinate.name).toLowerCase()).indexOf((xoadau(valueinput).toLowerCase())) != -1 && coordinate.code === sel ;
             });
+
+//            console.log(coorSearch);
 
             if(coorSearch.length > 0)
             {
@@ -281,6 +295,59 @@
           alert("Please enter search word");
         }    
         
+      }
+
+      function changeCode(){
+
+        var coorSearch;
+
+        var sel = document.getElementById('sel1').value;
+
+        var urlJsonCoordinates = 'http://localhost:9081/coordinates';
+        
+        var valueinput = document.getElementById("pac-input").value.trim();
+
+        if(valueinput)
+        {
+          axios.get(urlJsonCoordinates).then(function(res)
+          {
+            
+            deleteMarker();
+            var getData = res.data;          
+            
+            if(sel!=='a')
+            {
+              coorSearch = getData.filter(function(coordinate){
+                return (xoadau(coordinate.name).toLowerCase()).indexOf((xoadau(valueinput).toLowerCase())) != -1 && coordinate.code === sel ;
+              });
+            }
+            else{
+              coorSearch = getData.filter(function(coordinate){
+//                return (xoadau(coordinate.name).toLowerCase()).indexOf((xoadau(valueinput).toLowerCase())) != -1;
+              });
+            }
+
+//            console.log(coorSearch);
+
+            if(coorSearch.length > 0)
+            {
+              for(var i=0;i<coorSearch.length;i++)
+              {
+                addMarker(coorSearch[i]);
+
+              }
+            }
+            else
+            {
+              alert("Not found values");
+            }
+                                        
+            }).catch(function(err){});  
+        }
+        else{
+          alert("Please enter search word");
+        }    
+
       }
 
     </script> 
